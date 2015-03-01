@@ -1,0 +1,32 @@
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<style type="text/css">
+		h2 {margin-left: 15px;}
+		div {
+			color:red;
+			width:500px;
+			font-size:25px;
+			margin-left: 15px;
+			word-wrap:break-word; 
+			word-break:break-all;
+		}
+		a {margin-left: 15px;font-size: 20px}
+		
+		button {margin-left: 15px;font-size: 20px}
+	</style>
+	
+<script>
+function newDoc()
+ {
+ window.location.assign("/")
+ }
+</script>
+</head>
+
+<h2>满足条件的组合：</h3>
+
+<div>{{printf "%s" .Body}}</div>
+<br>
+<!--p><a href="/">[重新输入]</a></p-->
+<button type="button" onclick="newDoc()">重新输入</button>
+<button type="button" onclick="window.history.back();">修改条件</button>
