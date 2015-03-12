@@ -8,17 +8,16 @@ import (
 	"flag"
 	"fmt"
 	"html/template"
-	"io/ioutil"
-	"log"
 	"net"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"pl3/algm"
 )
 
 var (
-	addr = flag.Bool("addr", false, "find open address and print to final-port.txt")
+	port = flag.Int("port", 80, "set server port.")
 )
 
 type Page struct {
@@ -36,6 +35,8 @@ func resultHandler(w http.ResponseWriter, r *http.Request) {
 	hw := r.FormValue("hw")
 	max := r.FormValue("max")
 	min := r.FormValue("min")
+	yh := r.FormValue("yh")
+	lj := r.FormValue("lj")
 
 	filters := make([]algm.Filter, 0)
 	filters = append(filters,
@@ -43,7 +44,9 @@ func resultHandler(w http.ResponseWriter, r *http.Request) {
 		algm.KdFilter{KdSet: kd},
 		algm.HwFilter{HwSet: hw},
 		algm.MaxFilter{MaxSet: max},
-		algm.MinFilter{MinSet: min})
+		algm.MinFilter{MinSet: min},
+		algm.YhFilter{YhSet: yh},
+		algm.LjFilter{LjSet: lj})
 
 	cands := make([]string, 0)
 	for i := 0; i < 1000; i++ {
@@ -70,19 +73,19 @@ func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/result", resultHandler)
 
-	if *addr {
-		l, err := net.Listen("tcp", "127.0.0.1:0")
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = ioutil.WriteFile("final-port.txt", []byte(l.Addr().String()), 0644)
-		if err != nil {
-			log.Fatal(err)
-		}
-		s := &http.Server{}
-		s.Serve(l)
+	if *port <= 0 || *port > 65535 {
+		fmt.Printf("invalid port:%d!", *port)
 		return
 	}
+	p := strconv.Itoa(*port)
 
-	http.ListenAndServe(":8080", nil)
+	conn, err := net.Dial("udp", "www.google.com.hk:80")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	defer conn.Close()
+
+	addr := strings.Split(conn.LocalAddr().String(), ":")[0] + ":" + p
+	http.ListenAndServe(addr, nil)
 }
