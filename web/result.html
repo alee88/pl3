@@ -1,7 +1,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 	<style type="text/css">
-		h2 {margin-left: 15px;}
+		h3 {
+			color:blue;
+			width:500px;
+			font-size:25px;
+			margin-left: 15px;
+			word-wrap:break-word; 
+			word-break:break-all;
+		}
 		div {
 			color:red;
 			width:500px;
@@ -11,7 +18,7 @@
 			word-break:break-all;
 		}
 		a {margin-left: 15px;font-size: 20px}
-		
+		p {margin-left: 15px}
 		button {margin-left: 15px;font-size: 20px}
 	</style>
 	
@@ -21,12 +28,15 @@ function newDoc()
  window.location.assign("/")
  }
 </script>
+
+<title>{{printf "%s" .Title}}</title>
 </head>
 
 <script type="text/javascript" src="http://tajs.qq.com/stats?sId=43297331" charset="UTF-8"></script>
 
-<h2>满足条件的组合：</h3>
 
+<h3>{{printf "%s" .Tips}}</h3>
+<h3>{{printf "%s" .Total}}</h3>
 <div>{{printf "%s" .Body}}</div>
 <br>
 <!--p><a href="/">[重新输入]</a></p-->

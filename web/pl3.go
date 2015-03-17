@@ -22,6 +22,8 @@ var (
 
 type Page struct {
 	Title string
+	Tips  string
+	Total string
 	Body  []byte
 }
 
@@ -55,7 +57,11 @@ func resultHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	rst := algm.Filt(filters, cands)
 
-	p := &Page{Title: "结果", Body: []byte(strings.Join(rst, ";"))}
+	tips := fmt.Sprintf("跨度[%s],和尾[%s],最大值[%s],最小值[%s],余数和[%s],数字累加值[%s]\n",
+		kd, hw, max, min, yh, lj)
+	num := fmt.Sprintf("满足条件的组合共有：%d 组", len(rst))
+
+	p := &Page{Title: "结果", Tips: tips, Total: num, Body: []byte(strings.Join(rst, ";"))}
 	renderTemplate(w, "result", p)
 }
 
