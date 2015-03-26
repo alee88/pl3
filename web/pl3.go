@@ -8,8 +8,11 @@ import (
 	"flag"
 	"fmt"
 	"html/template"
+	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
+	"path"
 	"strconv"
 	"strings"
 
@@ -25,6 +28,32 @@ type Page struct {
 	Tips  string
 	Total string
 	Body  []byte
+}
+
+const (
+	TEMPLATE_DIR = "../views"
+)
+
+var templates = make(map[string]*template.Template)
+
+func init() {
+	fileInfoArr, err := ioutil.ReadDir(TEMPLATE_DIR)
+	if err != nil {
+		panic(err)
+		return
+	}
+	var templateName, templatePath string
+
+	for _, fileInfo := range fileInfoArr {
+		templateName = fileInfo.Name()
+		if ext := path.Ext(templateName); ext != ".html" {
+			continue
+		}
+		templatePath = TEMPLATE_DIR + "/" + templateName
+		log.Println("Loading template:", templatePath)
+		t := template.Must(template.ParseFiles(templatePath))
+		templates[templateName] = t
+	}
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,10 +94,8 @@ func resultHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "result", p)
 }
 
-var templates = template.Must(template.ParseFiles("index.html", "result.html"))
-
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-	err := templates.ExecuteTemplate(w, tmpl+".html", p)
+	err := templates[tmpl+".html"].Execute(w, p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
