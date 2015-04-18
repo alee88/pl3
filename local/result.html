@@ -1,0 +1,268 @@
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<style type="text/css">
+		h3 {
+			text-align:center;
+			color:gray;
+			font-size:1.25em;
+			margin-left: auto;
+			word-wrap:break-word; 
+			word-break:break-all;
+		}
+		div {
+			text-align:center;
+			color:red;
+			font-size:1.5em;
+			margin-left: auto;
+			word-wrap:break-word; 
+			word-break:break-all;
+		}
+		p {
+			text-align:center;
+			color:red;
+			font-size:1.25em;
+		}
+		button {margin-left: auto;font-size: 1.25em}
+	</style>
+	
+<script type="text/javascript">
+function newDoc()
+ {
+ window.location.assign("./index.html")
+ }
+ </script>
+ 
+ <script type="text/javascript">
+ var kd,hw,max,min,yh,lj;
+ var allCond="0123456789";
+ var allYh="0123456";
+ var size=0;
+ var result="";
+ 
+  function genResults()
+{
+	getValues();
+	
+	var cands = new Array();
+	for(var i=0;i<1000;i++) {
+		s = pad(i.toString(),3);
+		if (isAsc(s)) {
+			cands.push(s);
+		}
+	}
+	
+	fcands = filtByKd(cands);
+	fcands2 = filtByHw(fcands);
+	fcands3 = filtByMax(fcands2);
+	fcands4 = filtByMin(fcands3);
+	fcands5 = filtByYh(fcands4);
+	fcands6 = filtByLj(fcands5);
+	
+	size = fcands6.length;
+	result = fcands6.join(";");
+	
+	
+	//alert("after all,cands:"+fcands6);
+	
+	document.write("\<p\>满足条件的组合共有：" + size + "组\<\/p\>");
+	document.write("\<div\>" + result +"\<\/div\>");
+}
+
+ </script>
+ 
+ <script>
+ function filtByKd(cands)
+ {
+	var fCands = new Array();
+	for (var i=0; i< cands.length; i++ ) {
+		ck = parseInt(cands[i].charAt(2),10) - parseInt(cands[i].charAt(0),10);
+		sck = ck.toString();
+
+		if ( kd.indexOf(sck) != -1) {
+			fCands.push(cands[i]);
+		}
+	}
+	
+	return fCands;
+ }
+
+ function filtByHw(cands)
+ {
+	var fCands = new Array();
+	
+	for (var i=0; i< cands.length; i++ ) {
+		sum = parseInt(cands[i].charAt(2),10) + parseInt(cands[i].charAt(1),10) + parseInt(cands[i].charAt(0),10);
+		sck = sum.toString();
+
+		if ( hw.indexOf(sck[sck.length-1]) != -1) {
+			fCands.push(cands[i]);
+		}
+	}
+	
+	return fCands;
+ }
+
+ function filtByMax(cands)
+ {
+	var fCands = new Array();
+	
+	for (var i=0; i< cands.length; i++ ) {
+		m = parseInt(cands[i].charAt(2),10);
+		sck = m.toString();
+
+		if ( max.indexOf(sck) != -1) {
+			fCands.push(cands[i]);
+		}
+	}
+	
+	return fCands;
+ }
+ 
+  function filtByMin(cands)
+ {
+	var fCands = new Array();
+	
+	for (var i=0; i< cands.length; i++ ) {
+		mi = parseInt(cands[i].charAt(0),10);
+		sck = mi.toString();
+
+		if ( min.indexOf(sck) != -1) {
+			fCands.push(cands[i]);
+		}
+	}
+	
+	return fCands;
+ }
+ 
+ function filtByYh(cands)
+ {
+	var fCands = new Array();
+	
+	for (var i=0; i< cands.length; i++ ) {
+		y = 0;
+		for (var j=0;j<cands[i].length;j++) {
+			y += parseInt(cands[i].charAt(j),10) % 3 ;
+		}
+		sck = y.toString();
+
+		if ( yh.indexOf(sck) != -1) {
+			fCands.push(cands[i]);
+		}
+	}
+	
+	return fCands;
+ }
+ 
+ function filtByLj(cands)
+ {
+	var fCands = new Array();
+	
+	for (var i=0; i< cands.length; i++ ) {
+		l = 0;
+		for (var j=0;j<cands[i].length;j++) {
+			l += parseInt(cands[i].charAt(j),10) ;
+		}
+		
+		while(l > 9) {
+			l = Math.floor(l/10) + l%10;
+		}
+		sck = l.toString();
+		
+		if ( lj.indexOf(sck) != -1) {
+			fCands.push(cands[i]);
+		}
+	}
+	
+	return fCands;
+ }
+
+function pad(num, n) {
+    var len = num.toString().length;
+    while(len < n) {
+        num = "0" + num;
+        len++;
+    }
+    return num;
+}
+
+ function getValues()
+ {
+	var args = new Object( ); 
+	var query = location.search.substring(1); 
+
+	var pairs = query.split("&"); // Break at ampersand 
+	for(var i = 0; i < pairs.length; i++) { 
+		var pos = pairs[i].indexOf('='); 
+		if (pos == -1) continue; 
+		var argname = pairs[i].substring(0,pos); 
+		var value = pairs[i].substring(pos+1); 
+		value = decodeURIComponent(value); 
+		args[argname] = value; 
+	} 
+	kd = args["kd"];
+	hw = args["hw"];
+	max = args["max"];
+	min = args["min"];
+	yh = args["yh"];
+	lj = args["lj"];
+
+	document.write("\<h3\>跨度["+ kd +"],和尾["+ hw +"],最大值["+max+"],最小值["+min+"],余数和["+yh+"],数字累加值["+lj+"]\<\/h3\>");
+	
+	if (kd=='') {
+		kd = allCond;
+	}
+	if (hw=='') {
+		hw = allCond;
+	}
+	if (max=='') {
+		max = allCond;
+	}
+	if (min=='') {
+		min = allCond;
+	}
+	if (yh=='') {
+		yh = allYh;
+	}
+	if (lj=='') {
+		lj = allCond;
+	}
+ }
+
+ function isAsc(s) 
+ {
+	if (!s) {
+		return true;
+	}
+
+	for(j=0;j<s.length-1;j++) {
+		if ( s.charAt(j) <= s.charAt(j+1) ) {
+			continue;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	return true;
+ }
+</script>
+
+<title>生成结果</title>
+</head>
+
+<body>
+
+<script>
+genResults();
+</script>
+
+<br>
+
+<div>
+<CENTER>
+<button type="button" onclick="newDoc()">重新输入</button>
+<button type="button" onclick="window.history.back();">修改条件</button>
+</div>
+
+</body>
