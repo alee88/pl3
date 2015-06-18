@@ -34,9 +34,12 @@ function newDoc()
  </script>
  
  <script type="text/javascript">
- var kd,hw,max,min,yh,lj;
+ var kd,hw,max,min,yh,lj,ds,js,zs;
  var allCond="0123456789";
  var allYh="0123456";
+ var allDs="0123";
+ var allJs="0123";
+ var allZs="0123";
  var size=0;
  var result="";
  
@@ -58,9 +61,12 @@ function newDoc()
 	fcands4 = filtByMin(fcands3);
 	fcands5 = filtByYh(fcands4);
 	fcands6 = filtByLj(fcands5);
+	fcands7 = filtByDs(fcands6);
+	fcands8 = filtByJs(fcands7);
+	fcands9 = filtByZs(fcands8);
 	
-	size = fcands6.length;
-	result = fcands6.join(";");
+	size = fcands9.length;
+	result = fcands9.join(";");
 	
 	
 	//alert("after all,cands:"+fcands6);
@@ -177,6 +183,73 @@ function newDoc()
 	return fCands;
  }
 
+function filtByDs(cands)
+ {
+	var fCands = new Array();
+	
+	for (var i=0; i< cands.length; i++ ) {
+		l = 0;
+		for (var j=0;j<cands[i].length;j++) {
+			if (parseInt(cands[i].charAt(j),10) >=5) {
+				l++;
+			}
+		}
+		
+		sck = l.toString();
+		
+		if ( ds.indexOf(sck) != -1) {
+			fCands.push(cands[i]);
+		}
+	}
+	
+	return fCands;
+ }
+
+function filtByJs(cands)
+ {
+	var fCands = new Array();
+	
+	for (var i=0; i< cands.length; i++ ) {
+		l = 0;
+		for (var j=0;j<cands[i].length;j++) {
+			if (parseInt(cands[i].charAt(j),10)%2 != 0) {
+				l++;
+			}
+		}
+		
+		sck = l.toString();
+		
+		if ( js.indexOf(sck) != -1) {
+			fCands.push(cands[i]);
+		}
+	}
+	
+	return fCands;
+ }
+
+function filtByZs(cands)
+ {
+	var fCands = new Array();
+	
+	for (var i=0; i< cands.length; i++ ) {
+		l = 0;
+		for (var j=0;j<cands[i].length;j++) {
+			d = parseInt(cands[i].charAt(j),10);
+			if ( d <= 7 && d != 0 && d!=4 && d!=6) {
+				l++;
+			}
+		}
+		
+		sck = l.toString();
+		
+		if ( zs.indexOf(sck) != -1) {
+			fCands.push(cands[i]);
+		}
+	}
+	
+	return fCands;
+ }
+
 function pad(num, n) {
     var len = num.toString().length;
     while(len < n) {
@@ -206,8 +279,11 @@ function pad(num, n) {
 	min = args["min"];
 	yh = args["yh"];
 	lj = args["lj"];
+	ds = args["ds"];
+	js = args["js"];
+	zs = args["zs"];
 
-	document.write("\<h3\>跨度["+ kd +"],和尾["+ hw +"],最大值["+max+"],最小值["+min+"],余数和["+yh+"],数字累加值["+lj+"]\<\/h3\>");
+	document.write("\<h3\>跨度["+ kd +"],和尾["+ hw +"],最大值["+max+"],最小值["+min+"],余数和["+yh+"],数字累加值["+lj+"],大数个数["+ds+"],奇数个数["+js+"],质数个数["+zs+"]\<\/h3\>");
 	
 	if (kd=='') {
 		kd = allCond;
@@ -227,6 +303,17 @@ function pad(num, n) {
 	if (lj=='') {
 		lj = allCond;
 	}
+	if (ds=='') {
+		ds = allDs;
+	}
+	if (js=='') {
+		js = allJs;
+	}
+	if (zs=='') {
+		zs = allZs;
+	}
+
+	document.write("\<h3\>跨度["+ kd +"],和尾["+ hw +"],最大值["+max+"],最小值["+min+"],余数和["+yh+"],数字累加值["+lj+"],大数个数["+ds+"],奇数个数["+js+"],质数个数["+zs+"]\<\/h3\>");
  }
 
  function isAsc(s) 
