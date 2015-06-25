@@ -34,7 +34,7 @@ function newDoc()
  </script>
  
  <script type="text/javascript">
- var kd,hw,max,min,yh,lj,ds,js,zs;
+ var kd,hw,max,min,med,yh,lj,ds,js,zs;
  var allCond="0123456789";
  var allYh="0123456";
  var allDs="0123";
@@ -59,14 +59,15 @@ function newDoc()
 	fcands2 = filtByHw(fcands);
 	fcands3 = filtByMax(fcands2);
 	fcands4 = filtByMin(fcands3);
-	fcands5 = filtByYh(fcands4);
-	fcands6 = filtByLj(fcands5);
-	fcands7 = filtByDs(fcands6);
-	fcands8 = filtByJs(fcands7);
-	fcands9 = filtByZs(fcands8);
+	fcands5 = filtByMed(fcands4);
+	fcands6 = filtByYh(fcands5);
+	fcands7 = filtByLj(fcands6);
+	fcands8 = filtByDs(fcands7);
+	fcands9 = filtByJs(fcands8);
+	fcands10 = filtByZs(fcands9);
 	
-	size = fcands9.length;
-	result = fcands9.join(";");
+	size = fcands10.length;
+	result = fcands10.join(";");
 	
 	
 	//alert("after all,cands:"+fcands6);
@@ -134,6 +135,22 @@ function newDoc()
 		sck = mi.toString();
 
 		if ( min.indexOf(sck) != -1) {
+			fCands.push(cands[i]);
+		}
+	}
+	
+	return fCands;
+ }
+ 
+ function filtByMed(cands)
+ {
+	var fCands = new Array();
+	
+	for (var i=0; i< cands.length; i++ ) {
+		mi = parseInt(cands[i].charAt(1),10);
+		sck = mi.toString();
+
+		if ( med.indexOf(sck) != -1) {
 			fCands.push(cands[i]);
 		}
 	}
@@ -277,13 +294,14 @@ function pad(num, n) {
 	hw = args["hw"];
 	max = args["max"];
 	min = args["min"];
+	med = args["med"];
 	yh = args["yh"];
 	lj = args["lj"];
 	ds = args["ds"];
 	js = args["js"];
 	zs = args["zs"];
 
-	document.write("\<h3\>跨度["+ kd +"],和尾["+ hw +"],最大值["+max+"],最小值["+min+"],余数和["+yh+"],数字累加值["+lj+"],大数个数["+ds+"],奇数个数["+js+"],质数个数["+zs+"]\<\/h3\>");
+	document.write("\<h3\>跨度["+ kd +"],和尾["+ hw +"],最大值["+max+"],最小值["+min+"],中间值["+med+"],余数和["+yh+"],数字累加值["+lj+"],大数个数["+ds+"],奇数个数["+js+"],质数个数["+zs+"]\<\/h3\>");
 	
 	if (kd=='') {
 		kd = allCond;
@@ -296,6 +314,9 @@ function pad(num, n) {
 	}
 	if (min=='') {
 		min = allCond;
+	}
+	if (med=='') {
+		med = allCond;
 	}
 	if (yh=='') {
 		yh = allYh;
